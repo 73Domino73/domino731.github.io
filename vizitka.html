@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайт-визитка | Веб-разработчик</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Шапка и навигация */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+        
+        .logo span {
+            color: #e74c3c;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        nav a.active {
+            background-color: #3498db;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Основной контент */
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+        
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        /* Главная страница */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .hero-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .hero-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .profile-img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 25%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 5px solid #3498db;
+        }
+        
+        .intro {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        
+        /* Обо мне страница */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .skills-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .skills-table th, .skills-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .skills-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .skills-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .skill-level {
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        
+        .skill-level span {
+            display: block;
+            height: 100%;
+            background-color: #2ecc71;
+            border-radius: 5px;
+        }
+        
+        /* Портфолио страница */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .portfolio-item {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .portfolio-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .portfolio-info {
+            padding: 1.5rem;
+        }
+        
+        /* Контакты страница */
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .contact-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .contact-info {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .contact-details {
+            margin-top: 1.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        
+        .contact-item i {
+            font-size: 1.5rem;
+            color: #3498db;
+            margin-right: 1rem;
+            width: 30px;
+        }
+        
+        /* Подвал */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: #3498db;
+        }
+        
+        .copyright {
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            nav ul {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: #2c3e50;
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem 0;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav ul.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            nav li {
+                margin: 0.8rem 0;
+            }
+            
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка с навигацией -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">Сайт<span>Визитка</span></div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="#home" class="nav-link active" data-page="home">Главная</a></li>
+                    <li><a href="#about" class="nav-link" data-page="about">Обо мне</a></li>
+                    <li><a href="#portfolio" class="nav-link" data-page="portfolio">Портфолио</a></li>
+                    <li><a href="#contact" class="nav-link" data-page="contact">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основное содержимое -->
+    <main class="container">
+        <!-- Главная страница -->
+        <section id="home" class="page active">
+            <div class="hero">
+                <div class="hero-text">
+                    <h1>Веб-разработчик</h1>
+                    <p class="intro">Привет! Меня зовут Артем, и я студент 3 курса направления МОАИС. Специализируюсь на фронтенд-разработке с использованием HTML5, CSS3, JavaScript и React.</p>
+                    
+                    <a href="#contact" class="btn nav-link" data-page="contact" style="margin-top: 1.5rem; display: inline-block;">Связаться со мной</a>
+                </div>
+                <div class="hero-image">
+                    <img src="DSC_0077.JPG" alt="Фото разработчика" class="profile-img">
+                </div>
+            </div>
+            
+            <h2>Что я предлагаю</h2>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-code"></i>
+                    <h3>Веб-разработка</h3>
+                    <p>Создание современных и адаптивных веб-сайтов с использованием передовых технологий.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Адаптивный дизайн</h3>
+                    <p>Разработка сайтов, которые отлично выглядят и работают на всех устройствах.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Оптимизация</h3>
+                    <p>Ускорение загрузки сайтов и оптимизация для поисковых систем.</p>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Страница "Обо мне" -->
+        <section id="about" class="page">
+            <h1>Обо мне</h1>
+            
+            <div class="about-content">
+                <div>
+                    <h2>Мой опыт</h2>
+                    <p>Я веб-разработчик с опытом создания современных и функциональных веб-приложений.</p>
+                    <p>Начал свой путь с изучения HTML и CSS, затем углубился в JavaScript и фреймворки.</p>
+                    <p>Постоянно совершенствую свои навыки, слежу за новыми тенденциями в веб-разработке и изучаю новые технологии.</p>
+                </div>
+                
+            </div>
+            
+            <h2>Мои навыки</h2>
+            <table class="skills-table">
+                <thead>
+                    <tr>
+                        <th>Технология</th>
+                        <th>Уровень владения</th>
+                        <th>Опыт</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HTML5 / CSS3</td>
+                        <td>
+                            <div class="skill-level">
+                                <span style="width: 80%"></span>
+                            </div>
+                        </td>
+                        <td>3 года</td>
+                    </tr>
+                    <tr>
+                        <td>JavaScript</td>
+                        <td>
+                            <div class="skill-level">
+                                <span style="width: 75%"></span>
+                            </div>
+                        </td>
+                        <td>2 года</td>
+                    </tr>
+                    <tr>
+                        <td>TypeScript</td>
+                        <td>
+                            <div class="skill-level">
+                                <span style="width: 70%"></span>
+                            </div>
+                        </td>
+                        <td> 1 год</td>
+                    </tr>
+                    <tr>
+                        <td>Sql</td>
+                        <td>
+                            <div class="skill-level">
+                                <span style="width: 75%"></span>
+                            </div>
+                        </td>
+                        <td>2 года</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Страница "Портфолио" -->
+        <section id="portfolio" class="page">
+            <h1>Мои работы</h1>
+            <p>Вот некоторые из проектов, над которыми я работал в последнее время.</p>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    
+                    <div class="portfolio-info">
+                        <h3>Корпоративный сайт</h3>
+                        <p>Разработка современного корпоративного сайта для IT-компании с адаптивным дизайном.</p>
+                        <p><strong>Технологии:</strong> HTML, CSS, JavaScript, React</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    
+                    <div class="portfolio-info">
+                        <h3>Интернет-магазин</h3>
+                        <p>Создание полнофункционального интернет-магазина с корзиной товаров и системой оплаты.</p>
+                        <p><strong>Технологии:</strong> React, Node.js, MongoDB</p>
+                    </div>
+                </div>
+                
+               
+            </div>
+        </section>
+
+        <!-- Страница "Контакты" -->
+        <section id="contact" class="page">
+            <h1>Свяжитесь со мной</h1>
+            
+            <div class="contact-container">
+                <div class="contact-form">
+                    <h2>Форма обратной связи</h2>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Имя</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Сообщение</label>
+                            <textarea id="message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Отправить сообщение</button>
+                    </form>
+                </div>
+                
+                <div class="contact-info">
+                    <h2>Контактная информация</h2>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h3>Адрес</h3>
+                                <p>Майкоп, Первомайская 208 стр 2</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h3>Телефон</h3>
+                                <p>+7 (918) 660-76-45</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Email</h3>
+                                <p>artyom.ageev.05@mail.ru</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h3>Режим работы</h3>
+                                <p>Никогда</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">Сайт<span>Визитка</span></div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2023 Артем Агеев. Все права защищены.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Навигация между страницами
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            // Обработчик клика по навигационным ссылкам
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Получаем ID страницы из data-атрибута
+                    const pageId = this.getAttribute('data-page');
+                    
+                    // Скрываем все страницы
+                    pages.forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    
+                    // Показываем выбранную страницу
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    // Обновляем активную ссылку в навигации
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Закрываем мобильное меню, если оно открыто
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Обработчик для мобильного меню
+            menuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+            
+            // Закрытие меню при клике вне его области
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('nav') && !e.target.closest('.menu-toggle')) {
+                    navMenu.classList.remove('active');
+                }
+            });
+            
+            // Обработчик формы обратной связи
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Получаем данные из формы
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const message = document.getElementById('message').value;
+                    
+                    // В реальном приложении здесь был бы код отправки данных на сервер
+                    // Для демонстрации просто показываем сообщение
+                    alert(`Спасибо, ${name}! Ваше сообщение отправлено. Я свяжусь с вами по адресу ${email} в ближайшее время.`);
+                    
+                    // Очищаем форму
+                    contactForm.reset();
+                });
+            }
+            
+            // Анимация появления элементов при прокрутке
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.feature, .portfolio-item, .contact-form, .contact-info');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+            
+            // Устанавливаем начальные стили для анимации
+            document.querySelectorAll('.feature, .portfolio-item, .contact-form, .contact-info').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s, transform 0.5s';
+            });
+            
+            // Запускаем анимацию при загрузке и прокрутке
+            window.addEventListener('load', animateOnScroll);
+            window.addEventListener('scroll', animateOnScroll);
+            
+            // Инициализация анимации для текущей страницы
+            setTimeout(animateOnScroll, 100);
+        });
+    </script>
+</body>
+</html>
